@@ -43,13 +43,4 @@ npm run build
 ```
 This will generate a `dist` folder containing the optimized build.
 
-## Vercel Deployment & Proxy Configuration
 
-This project is configured for seamless deployment on **Vercel** while relying on external APIs (like AWS Elastic Beanstalk). 
-
-To solve Cross-Origin Requests (CORS) or Mixed Content blockers (if the frontend is `https` and backend is `http`), the project includes a `vercel.json` file. This tells Vercel to transparently proxy all API (`/api/*`) and WebSocket/SockJS (`/ws/*`) queries to the backend.
-
-### Production Setup steps:
-1. Push your code to GitHub and connect it to a Vercel project.
-2. In your Vercel Project Settings > **Environment Variables**, set `VITE_API_BASE_URL` to an **empty value** (leave it blank). 
-3. This ensures that the application queries the local Vercel domain, thus triggering the proxy rewrite rules defined in `vercel.json`!

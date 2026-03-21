@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/rooms";
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/rooms`;
 
 export const createRoom = async (payload) => {
   const res = await axios.post(BASE_URL, payload);
