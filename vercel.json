@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://skribbl-env.eba-cuuiauxr.eu-north-1.elasticbeanstalk.com/api/:path*"
+    },
+    {
+      "source": "/ws/:path*",
+      "destination": "http://skribbl-env.eba-cuuiauxr.eu-north-1.elasticbeanstalk.com/ws/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
