@@ -91,7 +91,9 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
 
   const handlePointerDown = (e) => {
     if (!isDrawer) return;
-    e.preventDefault();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     setDrawing(true);
     strokeIdRef.current = crypto.randomUUID();
 
@@ -112,7 +114,9 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
 
   const handlePointerMove = (e) => {
     if (!isDrawer || !drawing) return;
-    e.preventDefault();
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     
     const { x, y } = getCoordinates(e);
 
@@ -233,7 +237,7 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
               ref={canvasRef}
               width={CANVAS_WIDTH}
               height={CANVAS_HEIGHT}
-              className={`bg-white w-full h-full ${isDrawer ? 'cursor-crosshair' : 'cursor-default pointer-events-none'}`}
+              className={`bg-white w-full h-full touch-none ${isDrawer ? 'cursor-crosshair' : 'cursor-default pointer-events-none'}`}
               onMouseDown={handlePointerDown}
               onMouseMove={handlePointerMove}
               onMouseUp={handlePointerUp}

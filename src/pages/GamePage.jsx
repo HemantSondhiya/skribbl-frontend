@@ -65,6 +65,28 @@ export default function GamePage() {
     }
   };
 
+  // Automatically fetches the missing word from the API if a WebSocket message is dropped!
+  useEffect(() => {
+    if (!room) return;
+    
+    const _isDrawer = room.gameState.currentDrawerId === playerId;
+    const missingDrawData = _isDrawer 
+      ? (!room.gameState.currentWord && !room.gameState.word)
+      : (room.gameState.wordLength === 0 && !room.gameState.maskedWord);
+
+    if (room.gameState.phase === "DRAW" && missingDrawData) {
+      console.warn("WebSocket dropped word state! Auto-healing via API...");
+      loadRoom();
+    }
+  }, [
+    room?.gameState?.phase, 
+    room?.gameState?.wordLength, 
+    room?.gameState?.currentWord, 
+    room?.gameState?.maskedWord, 
+    room?.gameState?.currentDrawerId, 
+    playerId
+  ]);
+
   if (!room) return <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center gap-4">
     <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
     <p className="text-cyan-400 font-mono">Connecting to Game Server...</p>
