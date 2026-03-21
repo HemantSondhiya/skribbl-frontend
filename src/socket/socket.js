@@ -16,8 +16,7 @@ export const connectSocket = (onConnected) => {
     stompClient.deactivate();
   }
 
-  const envBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
-  const socket = new SockJS(`${envBaseUrl}/ws`);
+  const socket = new SockJS("/ws");
 
   stompClient = new Client({
     webSocketFactory: () => socket,
