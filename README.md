@@ -1,16 +1,55 @@
-# React + Vite
+# Skribbl Clone - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for the Skribbl Clone project, a real-time multiplayer drawing and guessing game.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Framework**: React 19 + Vite
+- **Styling**: Tailwind CSS 4
+- **Routing**: React Router DOM (v7)
+- **HTTP Client**: Axios
+- **WebSockets**: SockJS & STOMP (`@stomp/stompjs`) for real-time multiplayer gameplay
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Getting Started
 
-## React Compiler
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm or yarn
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Expanding the ESLint configuration
+### Environment Variables
+Configure your local environment variables. Create a `.env.local` or `.env` file at the root of the project:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```env
+VITE_API_BASE_URL=http://localhost:8080
+```
+*(Replace `http://localhost:8080` with your deployed backend URL if testing against a remote backend locally.)*
+
+### Running Locally
+To start the Vite development server with Hot Module Replacement (HMR):
+```bash
+npm run dev
+```
+
+### Building for Production
+To build the app for production:
+```bash
+npm run build
+```
+This will generate a `dist` folder containing the optimized build.
+
+## Vercel Deployment & Proxy Configuration
+
+This project is configured for seamless deployment on **Vercel** while relying on external APIs (like AWS Elastic Beanstalk). 
+
+To solve Cross-Origin Requests (CORS) or Mixed Content blockers (if the frontend is `https` and backend is `http`), the project includes a `vercel.json` file. This tells Vercel to transparently proxy all API (`/api/*`) and WebSocket/SockJS (`/ws/*`) queries to the backend.
+
+### Production Setup steps:
+1. Push your code to GitHub and connect it to a Vercel project.
+2. In your Vercel Project Settings > **Environment Variables**, set `VITE_API_BASE_URL` to an **empty value** (leave it blank). 
+3. This ensures that the application queries the local Vercel domain, thus triggering the proxy rewrite rules defined in `vercel.json`!
