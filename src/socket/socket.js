@@ -16,7 +16,11 @@ export const connectSocket = (onConnected) => {
     stompClient.deactivate();
   }
 
-  const socket = new SockJS("/ws");
+  // Disable native WebSockets to prevent the browser from logging a 'wss:// failed' error. 
+  // Vercel only proxies HTTP requests, so we force SockJS to use its HTTP long-polling fallbacks immediately!
+  const socket = new SockJS("/ws", null, {
+    transports: ["xhr-streaming", "xhr-polling"]
+  });
 
   stompClient = new Client({
     webSocketFactory: () => socket,
