@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { connectSocket, disconnectSocket, getClient } from "../socket/socket";
 import { getRoom } from "../api/roomApi";
 import CanvasBoard from "../components/CanvasBoard";
@@ -9,17 +9,13 @@ import ScoreBoard from "../components/ScoreBoard";
 
 export default function GamePage() {
   const { roomCode } = useParams();
+  const location = useLocation();
   const [room, setRoom] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   
-  // Try to load bridged words from LobbyPage if we transitioned too slowly
+  // Load bridged words from LobbyPage's navigation state
   const [wordOptions, setWordOptions] = useState(() => {
-    const bridged = sessionStorage.getItem("round1Words");
-    if (bridged) {
-      sessionStorage.removeItem("round1Words");
-      return JSON.parse(bridged);
-    }
-    return [];
+    return location.state?.words || [];
   });
   
   const [serverTime, setServerTime] = useState(null);

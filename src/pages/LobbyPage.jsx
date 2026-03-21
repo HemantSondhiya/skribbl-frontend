@@ -13,6 +13,8 @@ export default function LobbyPage() {
   useEffect(() => {
     loadRoom();
 
+    let round1Words = [];
+
     connectSocket((client) => {
       // 1. Listen for room state updates
       client.subscribe(`/topic/rooms/${roomCode}/state`, (message) => {
@@ -20,13 +22,17 @@ export default function LobbyPage() {
         setRoom(updatedRoom);
 
         if (updatedRoom.gameState.phase !== "LOBBY") {
-          navigate(`/game/${roomCode}`);
+          // Delay navigation very slightly so the simultaneous 'word-options' STOMP 
+          // message can cleanly arrive and save before we unmount!
+          setTimeout(() => {
+            navigate(`/game/${roomCode}`, { state: { words: round1Words } });
+          }, 300);
         }
       });
 
       // 2. Catch the Round 1 words in case the server broadcasts them right as we switch pages!
       client.subscribe(`/topic/rooms/${roomCode}/word-options/${playerId}`, (message) => {
-        sessionStorage.setItem("round1Words", message.body);
+        round1Words = JSON.parse(message.body);
       });
     });
 
