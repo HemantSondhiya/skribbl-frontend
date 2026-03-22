@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: "https://taskhemant.duckdns.org/api",
 });
 
 export const createRoom = async (payload) => {
