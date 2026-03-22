@@ -5,7 +5,7 @@ let stompClient = null;
 
 // Connect directly to the backend for WebSocket — Vercel's HTTP proxy cannot upgrade
 // to a native WebSocket connection, causing slow HTTP long-polling for every draw point.
-const BACKEND_WS_URL = "http://skribbl-env.eba-cuuiauxr.eu-north-1.elasticbeanstalk.com/ws";
+const BACKEND_WS_URL = "https://skribbl-env.eba-cuuiauxr.eu-north-1.elasticbeanstalk.com/ws";
 
 export const connectSocket = (onConnected) => {
   // If we already have a successfully connected client, just return it immediately
