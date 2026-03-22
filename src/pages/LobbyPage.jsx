@@ -13,7 +13,19 @@ export default function LobbyPage() {
   useEffect(() => {
     loadRoom();
 
-    let round1Words = [];
+    // Use refs to coordinate the two async events without a blind timeout:
+    // 1. Game phase changes to non-LOBBY
+    // 2. Word options arrive (only sent to the drawer)
+    const stateRef = { gameStarted: false, isDrawer: false, words: [], navigated: false };
+
+    const maybeNavigate = () => {
+      if (stateRef.navigated) return;
+      // Navigate once game has started AND (we have words OR we are not the drawer)
+      if (stateRef.gameStarted && (stateRef.words.length > 0 || !stateRef.isDrawer)) {
+        stateRef.navigated = true;
+        navigate(`/game/${roomCode}`, { state: { words: stateRef.words } });
+      }
+    };
 
     connectSocket((client) => {
       // 1. Listen for room state updates
@@ -22,21 +34,20 @@ export default function LobbyPage() {
         setRoom(updatedRoom);
 
         if (updatedRoom.gameState.phase !== "LOBBY") {
-          // Delay navigation very slightly so the simultaneous 'word-options' STOMP 
-          // message can cleanly arrive and save before we unmount!
-          setTimeout(() => {
-            navigate(`/game/${roomCode}`, { state: { words: round1Words } });
-          }, 300);
+          stateRef.isDrawer = updatedRoom.gameState.currentDrawerId === playerId;
+          stateRef.gameStarted = true;
+          maybeNavigate();
         }
       });
 
-      // 2. Catch the Round 1 words in case the server broadcasts them right as we switch pages!
+      // 2. Catch Round 1 words — arrive almost simultaneously with the state change
       client.subscribe(`/topic/rooms/${roomCode}/word-options/${playerId}`, (message) => {
-        round1Words = JSON.parse(message.body);
+        stateRef.words = JSON.parse(message.body);
+        maybeNavigate();
       });
     });
 
-    // Remowed disconnectSocket() so the socket connection completely survives the page transition
+    // We intentionally do NOT call disconnectSocket() so the socket survives the page transition
   }, [roomCode, navigate, playerId]);
 
   const loadRoom = async () => {
