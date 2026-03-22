@@ -3,10 +3,6 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-// Connect directly to the backend for WebSocket — Vercel's HTTP proxy cannot upgrade
-// to a native WebSocket connection, causing slow HTTP long-polling for every draw point.
-const BACKEND_WS_URL = "https://skribbl-env.eba-cuuiauxr.eu-north-1.elasticbeanstalk.com/ws";
-
 export const connectSocket = (onConnected) => {
   // If we already have a successfully connected client, just return it immediately
   if (stompClient && stompClient.connected) {
@@ -19,9 +15,10 @@ export const connectSocket = (onConnected) => {
     stompClient.deactivate();
   }
 
-  // Connect directly to backend — bypasses Vercel proxy so native WebSocket upgrade works.
-  // Falls back to xhr-streaming only if native WS is unavailable.
-  const socket = new SockJS(BACKEND_WS_URL, null, {
+  // Use Vercel's proxy (/ws) so SSL is handled correctly.
+  // Allow native WebSocket transport first — Vercel Edge Network supports WS upgrades
+  // through rewrites, so this should be fast. Falls back to xhr-streaming if needed.
+  const socket = new SockJS("/ws", null, {
     transports: ["websocket", "xhr-streaming", "xhr-polling"]
   });
 
