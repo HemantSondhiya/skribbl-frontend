@@ -15,10 +15,9 @@ export const connectSocket = (onConnected) => {
     stompClient.deactivate();
   }
 
-  // Use Vercel's proxy (/ws) so SSL is handled correctly.
-  // Allow native WebSocket transport first — Vercel Edge Network supports WS upgrades
-  // through rewrites, so this should be fast. Falls back to xhr-streaming if needed.
-  const socket = new SockJS("/ws", null, {
+  // Connect directly to backend with valid SSL cert — native WebSocket upgrade works!
+  // This bypasses Vercel's proxy so drawing points go over a persistent WS connection.
+  const socket = new SockJS("https://taskhemant.duckdns.org/ws", null, {
     transports: ["websocket", "xhr-streaming", "xhr-polling"]
   });
 
