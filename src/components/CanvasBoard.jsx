@@ -175,6 +175,38 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
     }
   };
 
+  const handleClear = () => {
+    if (!isDrawer) return;
+    const client = getClient();
+    if (client && client.connected) {
+      // Send a dedicated clear command 
+      client.publish({
+        destination: "/app/draw.clear",
+        body: JSON.stringify({
+          roomCode: room.roomCode,
+          playerId,
+        }),
+      });
+      // Fallback: Also emit a massive white stroke in case the backend uses draw.add for clears
+      client.publish({
+        destination: "/app/draw.add",
+        body: JSON.stringify({
+          roomCode: room.roomCode,
+          playerId,
+          strokeId: crypto.randomUUID(),
+          color: "#FFFFFF",
+          size: 10000,
+          x: 400,
+          y: 300,
+        }),
+      });
+      client.publish({
+        destination: "/app/draw.end",
+        body: JSON.stringify({ roomCode: room.roomCode, strokeId: crypto.randomUUID() }),
+      });
+    }
+  };
+
   const sendPoint = (x, y) => {
     const client = getClient();
     if (client && client.connected) {
@@ -272,9 +304,27 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
                 onClick={() => setCurrentColor(c)}
                 className={`w-8 h-8 rounded-full transition-transform hover:scale-110 ${currentColor === c ? 'scale-110 ring-4 ring-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'ring-1 ring-white/20'}`}
                 style={{ backgroundColor: c }}
-                title={c}
+                title={c === "#FFFFFF" ? "White" : c}
               />
             ))}
+            
+            {/* Eraser Tool (Selects White Color Explicitly + Icon) */}
+            <button
+              onClick={() => setCurrentColor("#FFFFFF")}
+              className={`w-10 h-10 flex items-center justify-center rounded-full transition-transform hover:scale-110 ml-2 ${currentColor === "#FFFFFF" ? 'scale-110 bg-cyan-500/20 text-cyan-400 ring-2 ring-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'bg-neutral-800 text-neutral-400 ring-1 ring-white/20 hover:text-white'}`}
+              title="Eraser"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+            </button>
+
+            {/* Clear Canvas Tool */}
+            <button
+              onClick={handleClear}
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-transform hover:scale-110 ml-2 bg-neutral-800 text-neutral-400 ring-1 ring-white/20 hover:text-rose-500 hover:bg-rose-500/10 hover:ring-rose-500/50"
+              title="Clear Canvas"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            </button>
           </div>
           
           <div className="flex items-center gap-3 bg-neutral-900 border border-white/5 p-2 px-4 rounded-2xl shadow-inner">
