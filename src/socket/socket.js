@@ -18,7 +18,8 @@ export const connectSocket = (onConnected) => {
 
   // Disable native WebSockets to prevent the browser from logging a 'wss:// failed' error. 
   // Vercel only proxies HTTP requests, so we force SockJS to use its HTTP long-polling fallbacks immediately!
-  const socket = new SockJS("/ws", null, {
+  const socketUrl = import.meta.env.VITE_WS_BASE_URL || "/ws";
+  const socket = new SockJS(socketUrl, null, {
     transports: ["xhr-streaming", "xhr-polling"]
   });
 
