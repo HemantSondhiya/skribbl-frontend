@@ -28,6 +28,23 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
     return () => clearInterval(timer);
   }, []);
 
+  // Attach touch events natively with { passive: false } so preventDefault() works
+  // React's synthetic touch events are passive by default, causing a console warning
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.addEventListener("touchstart", handlePointerDown, { passive: false });
+    canvas.addEventListener("touchmove", handlePointerMove, { passive: false });
+    canvas.addEventListener("touchend", handlePointerUp);
+    canvas.addEventListener("touchcancel", handlePointerUp);
+    return () => {
+      canvas.removeEventListener("touchstart", handlePointerDown);
+      canvas.removeEventListener("touchmove", handlePointerMove);
+      canvas.removeEventListener("touchend", handlePointerUp);
+      canvas.removeEventListener("touchcancel", handlePointerUp);
+    };
+  }, [isDrawer, drawing, currentColor, currentSize]);
+
   const CANVAS_WIDTH = 800;
   const CANVAS_HEIGHT = 600;
 
@@ -242,10 +259,6 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
               onMouseMove={handlePointerMove}
               onMouseUp={handlePointerUp}
               onMouseLeave={handlePointerUp}
-              onTouchStart={handlePointerDown}
-              onTouchMove={handlePointerMove}
-              onTouchEnd={handlePointerUp}
-              onTouchCancel={handlePointerUp}
             />
           </div>
         </div>
