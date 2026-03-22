@@ -43,6 +43,7 @@ export default function LobbyPage() {
       // 2. Catch Round 1 words — arrive almost simultaneously with the state change
       client.subscribe(`/topic/rooms/${roomCode}/word-options/${playerId}`, (message) => {
         stateRef.words = JSON.parse(message.body);
+        localStorage.setItem("wordOptions", message.body);
         maybeNavigate();
       });
     });

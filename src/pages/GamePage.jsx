@@ -13,9 +13,13 @@ export default function GamePage() {
   const [room, setRoom] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   
-  // Load bridged words from LobbyPage's navigation state
+  // Load bridged words from LobbyPage's navigation state or localStorage fallback
   const [wordOptions, setWordOptions] = useState(() => {
-    return location.state?.words || [];
+    try {
+      if (location.state?.words && location.state.words.length > 0) return location.state.words;
+      const stored = localStorage.getItem("wordOptions");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
   });
   
   const [serverTime, setServerTime] = useState(null);
@@ -46,6 +50,7 @@ export default function GamePage() {
 
       client.subscribe(`/topic/rooms/${roomCode}/word-options/${playerId}`, (message) => {
         setWordOptions(JSON.parse(message.body));
+        localStorage.setItem("wordOptions", message.body);
       });
     });
 

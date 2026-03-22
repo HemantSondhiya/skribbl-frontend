@@ -4,6 +4,7 @@ export default function WordPicker({ roomCode, playerId, words }) {
   const chooseWord = (word) => {
     const client = getClient();
     if (client && client.connected) {
+      localStorage.removeItem("wordOptions");
       client.publish({
         destination: "/app/game.choose-word",
         body: JSON.stringify({
