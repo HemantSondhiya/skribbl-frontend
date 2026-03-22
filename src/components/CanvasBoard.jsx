@@ -235,38 +235,38 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
 
   return (
     <div className="flex flex-col items-center w-full h-full" ref={containerRef}>
-      <div className="bg-neutral-900 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col w-full h-full max-h-[calc(100vh-4rem)] border border-white/10 overflow-hidden relative backdrop-blur-md">
+      <div className="bg-neutral-900 rounded-2xl md:rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col w-full h-full md:max-h-[calc(100vh-4rem)] border border-white/10 overflow-hidden relative backdrop-blur-md">
         
         {/* Top Header Bar */}
-        <div className="bg-neutral-950 border-b border-white/5 px-6 py-4 flex justify-between items-center z-10 w-full">
-          <div className="flex flex-col items-center bg-neutral-900 border border-white/5 py-1 px-4 rounded-xl shadow-inner min-w-[80px]">
+        <div className="bg-neutral-950 border-b border-white/5 px-3 md:px-6 py-3 md:py-4 flex justify-between items-center z-10 w-full">
+          <div className="flex flex-col items-center bg-neutral-900 border border-white/5 py-1 px-2 md:px-4 rounded-lg md:rounded-xl shadow-inner min-w-[60px] md:min-w-[80px]">
             <span className="text-[10px] text-neutral-500 font-black uppercase tracking-widest">Round</span>
-            <span className="text-xl font-mono font-bold text-white">
+            <span className="text-lg md:text-xl font-mono font-bold text-white">
               {room.gameState.currentRound || 1} / {room.settings?.rounds || 3}
             </span>
           </div>
 
-          <div className="flex flex-col items-center flex-1 mx-4 max-w-lg">
-            <div className="bg-neutral-950 border border-white/10 py-3 px-8 rounded-2xl shadow-inner w-full flex justify-center items-center relative overflow-hidden group">
+          <div className="flex flex-col items-center flex-1 mx-2 md:mx-4 max-w-lg">
+            <div className="bg-neutral-950 border border-white/10 py-2 md:py-3 px-2 md:px-8 rounded-xl md:rounded-2xl shadow-inner w-full flex justify-center items-center relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
               
-              <span className="text-3xl font-mono tracking-[0.25em] font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400 drop-shadow-sm text-center">
+              <span className="text-xl md:text-3xl font-mono tracking-[0.1em] md:tracking-[0.25em] font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400 drop-shadow-sm text-center">
                 {isDrawer && (room.gameState.currentWord || room.gameState.word) 
                   ? (room.gameState.currentWord || room.gameState.word)
                   : (room.gameState.maskedWord || (room.gameState.phase === "LOBBY" ? "WAITING..." : "WAITING..."))}
               </span>
               
               {!isDrawer && room.gameState.wordLength > 0 && !room.gameState.maskedWord && (
-                <span className="text-3xl font-mono tracking-[0.25em] font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400 drop-shadow-sm text-center">
+                <span className="text-xl md:text-3xl font-mono tracking-[0.1em] md:tracking-[0.25em] font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400 drop-shadow-sm text-center">
                   {Array(room.gameState.wordLength).fill("_").join(" ")}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="flex flex-col items-center bg-neutral-900 border border-white/5 py-1 px-4 rounded-xl shadow-inner min-w-[80px]">
+          <div className="flex flex-col items-center bg-neutral-900 border border-white/5 py-1 px-2 md:px-4 rounded-lg md:rounded-xl shadow-inner min-w-[60px] md:min-w-[80px]">
             <span className="text-[10px] text-cyan-500 font-black uppercase tracking-widest">Time</span>
-            <span className={`text-2xl font-bold font-mono ${localTime <= 10 && localTime > 0 ? 'text-rose-500 animate-pulse drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]' : 'text-cyan-400'}`}>
+            <span className={`text-xl md:text-2xl font-bold font-mono ${localTime <= 10 && localTime > 0 ? 'text-rose-500 animate-pulse drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]' : 'text-cyan-400'}`}>
               {localTime}
             </span>
           </div>
@@ -296,8 +296,8 @@ export default function CanvasBoard({ room, playerId, serverTime }) {
         </div>
         
         {/* Drawing Toolbar (Only show for drawer) */}
-        <div className={`bg-neutral-950 px-6 py-4 flex flex-col md:flex-row items-center justify-center gap-6 border-t border-white/5 transition-all duration-300 ${isDrawer ? 'opacity-100 h-auto translate-y-0' : 'opacity-0 pointer-events-none h-0 p-0 overflow-hidden translate-y-10'}`}>
-          <div className="flex items-center gap-2 bg-neutral-900 border border-white/5 p-2 rounded-2xl shadow-inner">
+        <div className={`bg-neutral-950 px-3 md:px-6 py-3 md:py-4 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 border-t border-white/5 transition-all duration-300 ${isDrawer ? 'opacity-100 h-auto translate-y-0' : 'opacity-0 pointer-events-none h-0 p-0 overflow-hidden translate-y-10'}`}>
+          <div className="flex flex-wrap justify-center items-center gap-2 bg-neutral-900 border border-white/5 p-2 rounded-2xl shadow-inner max-w-full">
             {colors.map(c => (
               <button
                 key={c}

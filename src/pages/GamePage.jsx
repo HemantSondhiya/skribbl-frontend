@@ -91,7 +91,7 @@ export default function GamePage() {
   const isDrawer = room.gameState.currentDrawerId === playerId;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-4 md:p-6 min-h-screen bg-neutral-950 text-neutral-100 font-sans selection:bg-purple-500/30">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 p-2 md:p-6 min-h-screen bg-neutral-950 text-neutral-100 font-sans selection:bg-purple-500/30 overflow-x-hidden">
       {(room.gameState.phase === "GAME_OVER" || room.gameState.phase === "FINISHED") ? (
         <div className="md:col-span-12 lg:col-span-12 flex items-center justify-center p-8 overflow-hidden relative">
           {/* Confetti Background FX */}
@@ -129,7 +129,7 @@ export default function GamePage() {
             <ScoreBoard players={room.players} drawerId={room.gameState.currentDrawerId} />
           </div>
 
-          <div className="md:col-span-6 lg:col-span-7 flex flex-col gap-4 relative z-10 h-[calc(100vh-2rem)]">
+          <div className="md:col-span-6 lg:col-span-7 flex flex-col gap-4 relative z-10 md:h-[calc(100vh-2rem)]">
             {room.gameState.phase === "WORD_PICK" && isDrawer && (
               <WordPicker roomCode={roomCode} playerId={playerId} words={wordOptions} />
             )}

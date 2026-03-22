@@ -2,9 +2,9 @@ export default function ScoreBoard({ players, drawerId }) {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
   return (
-    <div className="bg-neutral-900/80 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/10 h-full overflow-y-auto">
-      <h2 className="text-sm font-black uppercase tracking-widest text-neutral-500 mb-5 border-b border-white/10 pb-3">Leaderboard</h2>
-      <div className="space-y-3">
+    <div className="bg-neutral-900/80 backdrop-blur-md rounded-2xl shadow-xl p-4 md:p-5 border border-white/10 h-full max-h-48 md:max-h-none overflow-y-auto">
+      <h2 className="text-sm font-black uppercase tracking-widest text-neutral-500 mb-3 md:mb-5 border-b border-white/10 pb-2 md:pb-3">Leaderboard</h2>
+      <div className="space-y-2 md:space-y-3">
         {sortedPlayers.map((player, index) => {
           const isDrawing = player.id === drawerId;
           

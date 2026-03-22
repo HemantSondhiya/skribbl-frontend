@@ -45,7 +45,7 @@ export default function ChatBox({ roomCode, playerId, messages, players = [] }) 
   };
 
   return (
-    <div className="bg-neutral-900/80 backdrop-blur-xl rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.3)] p-5 h-[calc(100vh-2rem)] flex flex-col border border-white/10">
+    <div className="bg-neutral-900/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.3)] p-3 md:p-5 h-[400px] md:h-[calc(100vh-2rem)] flex flex-col border border-white/10">
       <div className="border-b border-white/10 pb-4 mb-4 flex justify-between items-center px-2 z-10">
         <h2 className="text-lg font-black text-white tracking-widest flex items-center gap-3">
           <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
@@ -68,7 +68,7 @@ export default function ChatBox({ roomCode, playerId, messages, players = [] }) 
           return (
             <div 
               key={index} 
-              className={`p-3 rounded-2xl w-full flex flex-col shadow-sm backdrop-blur-sm ${
+              className={`p-2.5 md:p-3 rounded-2xl w-full flex flex-col shadow-sm backdrop-blur-sm ${
                 isCorrectGuess ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 self-center max-w-[90%] text-center px-6 animate-pulse' : 
                 isPrivate ? 'bg-purple-900/30 text-purple-200 border border-purple-500/40 font-medium self-end max-w-[90%] rounded-tr-sm' :
                 isServerMsg ? 'bg-neutral-950/50 text-neutral-400 italic text-sm border border-white/5 self-center max-w-[90%] text-center' : 
